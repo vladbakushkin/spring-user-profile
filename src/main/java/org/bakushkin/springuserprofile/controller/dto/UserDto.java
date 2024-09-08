@@ -1,16 +1,14 @@
 package org.bakushkin.springuserprofile.controller.dto;
 
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@Schema(description = "Данные пользователя")
 public class UserDto {
 
     private Long id;
@@ -26,4 +24,6 @@ public class UserDto {
     private String email;
 
     private String phone;
+
+    private String username;
 }

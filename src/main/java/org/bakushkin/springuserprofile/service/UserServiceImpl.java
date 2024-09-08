@@ -1,8 +1,8 @@
 package org.bakushkin.springuserprofile.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bakushkin.springuserprofile.controller.dto.NewUserDto;
 import org.bakushkin.springuserprofile.controller.dto.UpdateUserDto;
 import org.bakushkin.springuserprofile.controller.dto.UserDto;
 import org.bakushkin.springuserprofile.entity.User;
@@ -10,10 +10,10 @@ import org.bakushkin.springuserprofile.repository.UserRepository;
 import org.bakushkin.springuserprofile.util.UserDtoMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,15 +23,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    @Override
-    @Transactional
-    public UserDto registerUser(NewUserDto newUserDto) {
-        User user = UserDtoMapper.toUser(newUserDto);
-        User savedUser = userRepository.save(user);
-        log.info("created user: {}", savedUser);
-        return UserDtoMapper.toUserDto(savedUser);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -78,6 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
         log.info("deleted user: {}", id);
@@ -98,8 +90,17 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    public UserDetailsService userDetailsService() {
+        return this::getByUsername;
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + userId + " not found"));
+    }
+
+    private User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User with username " + username + " not found"));
     }
 }

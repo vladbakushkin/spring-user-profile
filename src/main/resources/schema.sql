@@ -7,7 +7,11 @@ CREATE TABLE IF NOT EXISTS users
     birth_date  TIMESTAMP WITHOUT TIME ZONE,
     email       VARCHAR(255) UNIQUE                     NOT NULL,
     phone       VARCHAR(15) UNIQUE                      NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255)        NOT NULL,
+    role     VARCHAR(255)        NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (id),
     CONSTRAINT uq_users_email UNIQUE (email),
-    CONSTRAINT uq_users_phone UNIQUE (phone)
+    CONSTRAINT uq_users_phone UNIQUE (phone),
+    CONSTRAINT uq_users_username UNIQUE (username)
 );

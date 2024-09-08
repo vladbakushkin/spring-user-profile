@@ -1,13 +1,12 @@
 package org.bakushkin.springuserprofile.service;
 
-import org.bakushkin.springuserprofile.controller.dto.NewUserDto;
 import org.bakushkin.springuserprofile.controller.dto.UpdateUserDto;
 import org.bakushkin.springuserprofile.controller.dto.UserDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
 public interface UserService {
-    UserDto registerUser(NewUserDto newUserDto);
 
     UserDto getUser(Long id);
 
@@ -16,4 +15,6 @@ public interface UserService {
     void deleteUser(Long id);
 
     List<UserDto> getAllUsers(Integer from, Integer size);
+
+    UserDetailsService userDetailsService();
 }
